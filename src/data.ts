@@ -33,7 +33,9 @@ export type PersonInfo = {
   Phone: string;
 };
 
-export const listOfContacts: Record<string, PersonInfo[]> = {
+export type ListOfContacts = Record<string, PersonInfo[]>
+
+export const listOfContacts: ListOfContacts = {
   A: [],
   B: [],
   C: [],

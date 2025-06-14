@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { ChangeEvent, useState, useContext } from "react";
-import { ListContext } from "@/main";
+import { addUserAction, deleteAllUsersAction, ListContext } from "@/main";
 import { useListContext } from "./ListContext";
 import { enAlphabet } from "../data";
 import Modal from "./Modal";
 import SearchSection from "./SearchSection";
+import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/lib/redux";
 // import { XIcon } from "lucide-react";
 
 const defaultForm = {
@@ -22,7 +24,7 @@ const devForm = {
 };
 
 export default function Form() {
-  const [listOfContacts, setListOfContacts] = useListContext();
+  const listOfContacts = useAppSelector((state) => state.contactList);
 
   const [form, setForm] = useState(devForm);
 
@@ -52,8 +54,11 @@ export default function Form() {
     }));
   }
 
+  const dispatch = useAppDispatch();
+
   function addingUser() {
     console.log(form.hasError);
+
     if (form.hasError) {
       return null;
     } else {
@@ -63,22 +68,12 @@ export default function Form() {
         Phone: form.phone,
       };
 
-      let firstLetter = form.name[0].toUpperCase();
-      listOfContacts[firstLetter].push(person);
-
-      setListOfContacts({ ...listOfContacts });
-      console.log(listOfContacts);
+      dispatch(addUserAction(person));
     }
   }
 
   function deleteAllUsers() {
-    enAlphabet.map((letter) => {
-      if (listOfContacts[letter].length > 0) {
-        listOfContacts[letter] = [];
-        setListOfContacts({ ...listOfContacts });
-      }
-    });
-    console.log(listOfContacts);
+    dispatch(deleteAllUsersAction());
   }
 
   const [modal, setModal] = useState(false);
@@ -98,7 +93,7 @@ export default function Form() {
           (form.hasError ? "text-red-600 " : " ")
         }
         value={form.name}
-        onChange={e => handleNameChange(e)}
+        onChange={(e) => handleNameChange(e)}
       ></input>
 
       <input
@@ -110,7 +105,7 @@ export default function Form() {
           (form.hasError ? "text-red-600" : " ")
         }
         value={form.vacancy}
-        onChange={e => handleVacancyChange(e)}
+        onChange={(e) => handleVacancyChange(e)}
       ></input>
 
       <input
@@ -123,7 +118,7 @@ export default function Form() {
           (form.hasError ? "text-red-600" : " ")
         }
         value={form.phone}
-        onChange={e => handlePhoneChange(e)}
+        onChange={(e) => handlePhoneChange(e)}
       ></input>
       <div className="flex gap-4 items-center justify-center ">
         <Button type="button" onClick={addingUser}>

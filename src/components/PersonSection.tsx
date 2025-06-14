@@ -4,28 +4,20 @@ import { useListContext } from "./ListContext";
 import { Button } from "./ui/button";
 import { X } from "lucide-react";
 import { SquarePen } from "lucide-react";
-import {PersonInfo} from "../data"
+import { PersonInfo } from "../data";
 import EditSection from "./EditSection";
-
+import { useAppDispatch, useAppSelector } from "@/lib/redux";
+import { deleteUserAction } from "@/main";
 
 export default function PersonSection({ inputValue }: { inputValue: string }) {
-  const [listOfContacts, setListOfContacts] = useListContext();
+  const listOfContacts = useAppSelector((state) => state.contactList);
+  const dispatch = useAppDispatch();
 
-  function deleteUser(person :PersonInfo) {
-    const firstLetter = person.Name[0].toUpperCase()
-    listOfContacts[firstLetter]
-    const index = listOfContacts[firstLetter].indexOf(person)
-    listOfContacts[firstLetter].splice(index, 1)
-
-    setListOfContacts({ ...listOfContacts });
-    console.log(listOfContacts);
+  function deleteUser(person: PersonInfo) {
+    dispatch(deleteUserAction(person));
   }
 
-  function editUser(person :PersonInfo) {
-
-  }
-
-
+  function editUser(person: PersonInfo) {}
 
   return (
     <>
@@ -35,7 +27,7 @@ export default function PersonSection({ inputValue }: { inputValue: string }) {
             .filter((person) => person.Name.toLowerCase().includes(inputValue.toLowerCase()))
             .map((person, index) => {
               return (
-                <div 
+                <div
                   key={person.Name + person.Vacancy + person.Phone + index}
                   className="flex border justify-between items-center "
                 >
@@ -51,7 +43,6 @@ export default function PersonSection({ inputValue }: { inputValue: string }) {
 
                     <EditSection person={person} />
 
-                    
                     <Button variant="outline" size="icon" onClick={() => deleteUser(person)}>
                       <X />
                     </Button>

@@ -16,6 +16,7 @@ type ModalProps = {
   setModal: (open: boolean) => void;
 };
 
+
 export default function Modal({ children, open, setModal }: ModalProps) {
   const dialog = useRef<HTMLDialogElement>(null);
 
